@@ -20,6 +20,8 @@ import com.mkemp.mariobros.Screens.PlayScreen;
 
 public class Mario extends Sprite {
 
+    private String yooooo;
+
     // Holds all the states Mario can be in.
     public enum State { FALLING, JUMPING, STANDING, RUNNING };
 
