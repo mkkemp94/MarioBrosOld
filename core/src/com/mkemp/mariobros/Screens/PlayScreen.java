@@ -27,7 +27,7 @@ import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
 import com.mkemp.mariobros.Tools.WorldContactListener;
 
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by kempm on 5/21/2017.
@@ -59,7 +59,7 @@ public class PlayScreen implements Screen {
     //private Goomba goomba;
 
     private Array<Item> items;
-    private LinkedBlockingDeque<ItemDef> itemsToSpawn;
+    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
     private AssetManager manager;
     private Music music;
@@ -110,14 +110,14 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
 
         // Add bodies and fixtures to the game world, passing this screen as a constructor.
+        // This contains enemies.
         creator = new B2WorldCreator(this);
 
         // Characters
         player = new Mario(this);
-        //goomba = new Goomba(this, 5.64f, .32f);
 
         items = new Array<Item>();
-        itemsToSpawn = new LinkedBlockingDeque<ItemDef>();
+        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
     }
 
     public void spawnItem(ItemDef idef) {
@@ -144,9 +144,9 @@ public class PlayScreen implements Screen {
 
     public void handleInput(float dt) {
 
-//        if (Gdx.input.isTouched()) {
-//            gameCam.position.x += 100 * dt;
-//        }
+        if (Gdx.input.isTouched()) {
+            gameCam.position.x += 100 * dt;
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
 
@@ -179,16 +179,16 @@ public class PlayScreen implements Screen {
 
         // Update the character and enemy bodies, and the hud, based on how much time has passed.
         player.update(dt);
-        //goomba.update(dt);
+
         for (Enemy enemy : creator.getGoombas()) {
             enemy.update(dt);
             if (enemy.getX() < player.getX() + 224 / MarioBros.PPM)
                 enemy.b2body.setActive(true);
         }
-
         for (Item item : items) {
             item.update(dt);
         }
+
         hud.update(dt);
 
         // Update game cam. Only track x so the camera doesn't jump up and down.
@@ -224,21 +224,19 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         player.draw(game.batch);
-        //goomba.draw(game.batch);
+
         for (Enemy enemy : creator.getGoombas()) {
             enemy.draw(game.batch);
         }
         for (Item item : items) {
             item.draw(game.batch);
         }
+
         game.batch.end();
 
         // Set what will be shown via our camera, and draw it.
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-
-        /* Tell the game batch to only render what we can see. */
-//        game.batch.setProjectionMatrix(gameCam.combined);
     }
 
     /**
@@ -284,7 +282,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
         map.dispose();
         renderer.dispose();
         world.dispose();

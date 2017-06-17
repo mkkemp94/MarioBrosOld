@@ -3,7 +3,7 @@ package com.mkemp.mariobros.Sprites.TileObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.maps.MapObject;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Screens.PlayScreen;
@@ -17,10 +17,10 @@ public class Brick extends InteractiveTileObject {
     Hud hud;
     AssetManager manager;
 
-    public Brick(PlayScreen screen, Rectangle bounds) { //}, Hud hud, AssetManager manager) {
-        super(screen, bounds);
+    public Brick(PlayScreen screen, MapObject object) { //}, Hud hud, AssetManager manager) {
+        super(screen, object);
 
-        // Set the fixture to be a brick.
+        // Set the fixture tio be a brick.
         fixture.setUserData(this);
 
         // This is a brick filter.

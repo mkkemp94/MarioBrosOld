@@ -61,14 +61,14 @@ public class B2WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             // Create a brick with object oriented design!
-            new Brick(screen, rect);
+            new Brick(screen, object);
         }
 
         // Same with coins.
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
 
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Coin(screen, rect);
+            new Coin(screen, object);
         }
 
         // Create all goombas

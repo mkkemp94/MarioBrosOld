@@ -3,8 +3,8 @@ package com.mkemp.mariobros.Sprites.TileObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
@@ -28,8 +28,8 @@ public class Coin extends InteractiveTileObject {
     // We start at index 1 here.
     private final int BLANK_COIN = 28;
 
-    public Coin(PlayScreen screen, Rectangle bounds) { //}, Hud hud, AssetManager manager) {
-        super(screen, bounds);
+    public Coin(PlayScreen screen, MapObject object) { //}, Hud hud, AssetManager manager) {
+        super(screen, object);
 
         // Get the tileset tileset_gutter from Tiled
         tileSet = map.getTileSets().getTileSet("tileset_gutter");
@@ -51,9 +51,13 @@ public class Coin extends InteractiveTileObject {
         if (getCell().getTile().getId() == BLANK_COIN)
             manager.get("audio/sounds/bump.wav", Sound.class).play();
         else {
-            manager.get("audio/sounds/coin.wav", Sound.class).play();
-            screen.spawnItem(new ItemDef(new Vector2(body.getPosition().x,
-                    body.getPosition().y + 16 / MarioBros.PPM), Mushroom.class));
+            if (object.getProperties().containsKey("mushroom")) {
+                screen.spawnItem(new ItemDef(new Vector2(body.getPosition().x,
+                        body.getPosition().y + 16 / MarioBros.PPM), Mushroom.class));
+                manager.get("audio/sounds/powerup_spawn.wav", Sound.class).play();
+            } else {
+                manager.get("audio/sounds/coin.wav", Sound.class).play();
+            }
         }
 
         // Change the tile image and add to the score.
