@@ -54,6 +54,7 @@ public class MarioBros extends Game {
 		manager.load("audio/sounds/bump.wav", Sound.class);
 		manager.load("audio/sounds/breakblock.wav", Sound.class);
 		manager.load("audio/sounds/powerup_spawn.wav", Sound.class);
+		manager.load("audio/sounds/powerup.wav", Sound.class);
 
 		// ... but we're gonna do a synchronous load here instead.
 		// It blocks everything until the assets are finished loading.

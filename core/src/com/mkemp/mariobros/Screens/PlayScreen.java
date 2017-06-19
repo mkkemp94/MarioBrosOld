@@ -114,7 +114,7 @@ public class PlayScreen implements Screen {
         creator = new B2WorldCreator(this);
 
         // Characters
-        player = new Mario(this);
+        player = new Mario(this, manager);
 
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
