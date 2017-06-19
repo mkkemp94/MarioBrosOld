@@ -11,6 +11,7 @@ import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Screens.PlayScreen;
 import com.mkemp.mariobros.Sprites.Items.ItemDef;
 import com.mkemp.mariobros.Sprites.Items.Mushroom;
+import com.mkemp.mariobros.Sprites.Mario;
 
 /**
  * Created by kempm on 5/28/2017.
@@ -45,7 +46,7 @@ public class Coin extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit() {
+    public void onHeadHit(Mario mario) {
         Gdx.app.log("Coin", "Collision");
 
         if (getCell().getTile().getId() == BLANK_COIN)

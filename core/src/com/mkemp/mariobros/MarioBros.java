@@ -15,7 +15,7 @@ public class MarioBros extends Game {
 	public static final int V_WIDTH = 480;
 	public static final int V_HEIGHT = 208;
 
-	// Pixels per meter.
+	/** Pixels per meter. */
 	public static final float PPM = 100;
 
 	// Filters. Every fixture has one. There are two parts:
@@ -30,7 +30,7 @@ public class MarioBros extends Game {
 	public static final short ENEMY_BIT = 64;
 	public static final short ENEMY_HEAD_BIT = 128;
 	public static final short ITEM_BIT = 256;
-	public static final short YOOOOOOOO = 512;
+	public static final short MARIO_HEAD_BIT = 512;
 
 	// Container holding images and textures, etc.
 	public SpriteBatch batch;

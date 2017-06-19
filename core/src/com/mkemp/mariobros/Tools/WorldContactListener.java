@@ -31,19 +31,27 @@ public class WorldContactListener implements ContactListener {
         // Get the | between these...
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
-        // If this is a collision with Mario's head...
-        if (fixA.getUserData() == "head" || fixB.getUserData() == "head") {
-            Fixture head = (fixA.getUserData() == "head") ? fixA : fixB;
-            Fixture object = (head == fixA) ? fixB : fixA;
-
-            // If this object is an interactive tile object...
-            if (object.getUserData() instanceof InteractiveTileObject) {
-
-                ((InteractiveTileObject) object.getUserData()).onHeadHit();
-            }
-        }
+//        // If this is a collision with Mario's head...
+//        if (fixA.getUserData() == "head" || fixB.getUserData() == "head") {
+//            Fixture head = (fixA.getUserData() == "head") ? fixA : fixB;
+//            Fixture object = (head == fixA) ? fixB : fixA;
+//
+//            // If this object is an interactive tile object...
+//            if (object.getUserData() instanceof InteractiveTileObject) {
+//
+//                ((InteractiveTileObject) object.getUserData()).onHeadHit();
+//            }
+//        }
 
         switch (cDef) {
+
+            case MarioBros.MARIO_HEAD_BIT | MarioBros.BRICK_BIT:
+            case MarioBros.MARIO_HEAD_BIT | MarioBros.COIN_BIT:
+                if (fixA.getFilterData().categoryBits == MarioBros.MARIO_HEAD_BIT)
+                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Mario) fixA.getUserData());
+                else
+                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Mario) fixB.getUserData());
+                break;
 
             // If mario collides with the enemy's head bit...
             case MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT:
@@ -54,6 +62,13 @@ public class WorldContactListener implements ContactListener {
                 break;
 
             case MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT:
+                if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
+                    ((Enemy)fixA.getUserData()).reverseVelocity(true, false);
+                else
+                    ((Enemy)fixB.getUserData()).reverseVelocity(true, false);
+                break;
+
+            case MarioBros.ENEMY_BIT | MarioBros.BRICK_BIT:
                 if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
                     ((Enemy)fixA.getUserData()).reverseVelocity(true, false);
                 else

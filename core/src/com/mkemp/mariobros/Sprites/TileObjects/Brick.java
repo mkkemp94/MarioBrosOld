@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Mario;
 
 /**
  * Created by kempm on 5/28/2017.
@@ -31,19 +32,25 @@ public class Brick extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit() {
+    public void onHeadHit(Mario mario) {
         Gdx.app.log("Brick", "Collision");
 
-        // Set it to the destroyed category.
-        setCategoryFilter(MarioBros.DESTROYED_BIT);
+        if (mario.isBig()) {
 
-        // Remove the texture for this cell. I think the object still exists.
-        getCell().setTile(null);
+            // Set it to the destroyed category.
+            setCategoryFilter(MarioBros.DESTROYED_BIT);
 
-        // Add to score when we hit a brick.
-        hud.addScore(200);
+            // Remove the texture for this cell. I think the object still exists.
+            getCell().setTile(null);
 
-        manager.get("audio/sounds/breakblock.wav", Sound.class).play();
+            // Add to score when we hit a brick.
+            hud.addScore(200);
+
+            manager.get("audio/sounds/breakblock.wav", Sound.class).play();
+        }
+        else {
+            manager.get("audio/sounds/bump.wav", Sound.class).play();
+        }
 
     }
 }

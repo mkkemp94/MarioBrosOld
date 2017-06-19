@@ -55,7 +55,7 @@ public class Mario extends Sprite {
     private boolean runningRight;
     private boolean marioIsBig;
     private boolean runGrowAnimation;
-
+    private boolean timeToDefineBigMario;
 
     // Constructor takes in a world.
     public Mario(PlayScreen screen, AssetManager manager) {
@@ -121,11 +121,17 @@ public class Mario extends Sprite {
 
     public void update(float dt) {
 
-        // Set the position of the mario sprite to our body.
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+        if (marioIsBig)
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 - 6 / MarioBros.PPM);
+        else
+            // Set the position of the mario sprite to our body.
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
 
         // Display the appropriate frame as the sprite's texture region.
         setRegion(getFrame(dt));
+
+        if (timeToDefineBigMario)
+            defineBigMario();
 
     }
 
@@ -196,8 +202,68 @@ public class Mario extends Sprite {
     public void grow () {
         runGrowAnimation = true;
         marioIsBig = true;
+        timeToDefineBigMario = true;
         setBounds(getX(), getY(), getWidth(), getHeight()*2);
         manager.get("audio/sounds/powerup.wav", Sound.class).play();
+    }
+
+    public void defineBigMario() {
+
+        Vector2 currentPosition = b2body.getPosition();
+        world.destroyBody(b2body);
+
+        // Body definition.
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(currentPosition.add(0, 10 / MarioBros.PPM));
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        b2body = world.createBody(bdef);
+
+        // The fixture definition.
+        FixtureDef fdef = new FixtureDef();
+
+        // We need a shape.
+        CircleShape shape = new CircleShape();
+        shape.setRadius(6 / MarioBros.PPM);
+
+        // Set a filter.
+        fdef.filter.categoryBits = MarioBros.MARIO_BIT;
+
+        // What can he collide with?
+        fdef.filter.maskBits = MarioBros.GROUND_BIT |
+                MarioBros.COIN_BIT |
+                MarioBros.BRICK_BIT |
+                MarioBros.ENEMY_BIT |
+                MarioBros.OBJECT_BIT |
+                MarioBros.ENEMY_HEAD_BIT |
+                MarioBros.ITEM_BIT
+        ;
+
+        // Assign this shape to fdef.
+        fdef.shape = shape;
+
+        // Create the fixture for the body.
+        b2body.createFixture(fdef).setUserData(this);
+
+        // Making another circle below...
+        shape.setPosition(new Vector2(0, -14 / MarioBros.PPM));
+        b2body.createFixture(fdef).setUserData(this);
+
+        // Create a sensor for Mario's head.
+        // An edgeshape is basically a line between two points.
+        // Define that line to be above the head, a little to both sides.
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-2 / MarioBros.PPM, 6 / MarioBros.PPM), new Vector2(2 / MarioBros.PPM, 6 / MarioBros.PPM));
+
+        // Set the head. This fixture shouldn't collide with anything in the world.
+        fdef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
+        fdef.shape = head;
+        fdef.isSensor = true;
+
+        // Create fixture and uniquely identify this fixture as head.
+        // Also set user data to itself (Mario)
+        b2body.createFixture(fdef).setUserData(this);
+
+        timeToDefineBigMario = false;
     }
 
     public void defineMario() {
@@ -235,19 +301,22 @@ public class Mario extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
 
         // Create a sensor for Mario's head.
-        EdgeShape head = new EdgeShape();
-
         // An edgeshape is basically a line between two points.
         // Define that line to be above the head, a little to both sides.
+        EdgeShape head = new EdgeShape();
         head.set(new Vector2(-2 / MarioBros.PPM, 6 / MarioBros.PPM), new Vector2(2 / MarioBros.PPM, 6 / MarioBros.PPM));
 
-        // Set the head.
+        // Set the head. This fixture shouldn't collide with anything in the world.
+        fdef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
         fdef.shape = head;
-
-        // This fdef shouldn't collide with anything in the world.
         fdef.isSensor = true;
 
         // Create fixture and uniquely identify this fixture as head.
-        b2body.createFixture(fdef).setUserData("head");
+        // Also set user data to itself (Mario)
+        b2body.createFixture(fdef).setUserData(this);
+    }
+
+    public boolean isBig(){
+        return marioIsBig;
     }
 }

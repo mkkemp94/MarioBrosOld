@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Mario;
 
 /**
  * Created by kempm on 5/28/2017.
@@ -61,7 +62,7 @@ public abstract class InteractiveTileObject {
     }
 
     // Classes that implement this should include this method.
-    public abstract void onHeadHit();
+    public abstract void onHeadHit(Mario mario);
 
     public void setCategoryFilter(short filterBit) {
 
