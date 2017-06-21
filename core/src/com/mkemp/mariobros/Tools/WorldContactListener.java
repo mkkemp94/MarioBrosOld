@@ -77,10 +77,10 @@ public class WorldContactListener implements ContactListener {
 
             case MarioBros.ENEMY_BIT | MarioBros.MARIO_BIT:
                 Gdx.app.log("Mario", "Died");
-//                if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
-//                    ((Enemy)fixA.getUserData()).reverseVelocity(true, false);
-//                else
-//                    ((Enemy)fixB.getUserData()).reverseVelocity(true, false);
+                if (fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
+                    ((Mario) fixA.getUserData()).hit();
+                else
+                    ((Mario) fixB.getUserData()).hit();
                 break;
 
             case MarioBros.ENEMY_BIT | MarioBros.ENEMY_BIT:
