@@ -4,6 +4,7 @@ package com.mkemp.mariobros.Tools;
  * Created by kempm on 5/28/2017.
  */
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -30,6 +31,7 @@ public class B2WorldCreator {
     private BodyDef bdef;
     private PolygonShape shape;
     private FixtureDef fdef;
+    private AssetManager manager;
 
     private Array<Goomba> goombas;
 
@@ -39,8 +41,9 @@ public class B2WorldCreator {
      * Hud and asset manager will be used in brick and coin.
      * @param screen
      */
-    public B2WorldCreator(PlayScreen screen) {
+    public B2WorldCreator(PlayScreen screen, AssetManager manager) {
 
+        this.manager = manager;
         world = screen.getWorld();
         map = screen.getMap();
 
@@ -76,7 +79,7 @@ public class B2WorldCreator {
         for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
 
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            goombas.add(new Goomba(screen, rect.getX() / MarioBros.PPM, rect.getY() / MarioBros.PPM));
+            goombas.add(new Goomba(screen, rect.getX() / MarioBros.PPM, rect.getY() / MarioBros.PPM, manager));
         }
     }
 

@@ -111,7 +111,7 @@ public class PlayScreen implements Screen {
 
         // Add bodies and fixtures to the game world, passing this screen as a constructor.
         // This contains enemies.
-        creator = new B2WorldCreator(this);
+        creator = new B2WorldCreator(this, manager);
 
         // Characters
         player = new Mario(this, manager);

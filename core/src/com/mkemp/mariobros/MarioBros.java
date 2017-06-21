@@ -38,7 +38,7 @@ public class MarioBros extends Game {
 	/**
 	 * WARNING: Using asset manager in a static way can cause issues,
 	 * especially with android.  Making the asset manager static is
-	 * a bad idea. The tutorial does it to save tim, but I won't.
+	 * a bad idea. The tutorial does it to save time, but I won't.
 	 */
 	public AssetManager manager;
 
@@ -55,6 +55,9 @@ public class MarioBros extends Game {
 		manager.load("audio/sounds/breakblock.wav", Sound.class);
 		manager.load("audio/sounds/powerup_spawn.wav", Sound.class);
 		manager.load("audio/sounds/powerup.wav", Sound.class);
+		manager.load("audio/sounds/powerdown.wav", Sound.class);
+		manager.load("audio/sounds/stomp.wav", Sound.class);
+		manager.load("audio/sounds/mariodie.wav", Sound.class);
 
 		// ... but we're gonna do a synchronous load here instead.
 		// It blocks everything until the assets are finished loading.

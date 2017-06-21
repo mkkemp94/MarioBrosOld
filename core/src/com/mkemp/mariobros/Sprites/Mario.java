@@ -215,6 +215,10 @@ public class Mario extends Sprite {
             marioIsBig = false;
             timeToRedefineMario = true;
             setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+            manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+        }
+        else {
+            manager.get("audio/sounds/mariodie.wav", Sound.class).play();
         }
     }
 
@@ -270,7 +274,7 @@ public class Mario extends Sprite {
         // Also set user data to itself (Mario)
         b2body.createFixture(fdef).setUserData(this);
 
-        timeToDefineBigMario = false;
+        timeToRedefineMario = false;
     }
 
     public void defineBigMario() {
