@@ -226,6 +226,14 @@ public class Mario extends Sprite {
         manager.get("audio/sounds/powerup.wav", Sound.class).play();
     }
 
+    public boolean isDead() {
+        return marioIsDead;
+    }
+
+    public float getStateTimer() {
+        return stateTimer;
+    }
+
     public void hit() {
         if (marioIsBig) {
             marioIsBig = false;
