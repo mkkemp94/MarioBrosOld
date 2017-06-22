@@ -148,23 +148,25 @@ public class PlayScreen implements Screen {
             gameCam.position.x += 100 * dt;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+        if (player.currentState != Mario.State.DEAD) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
 
-            // Use impulse for jump - immediate change.
-            // Apply it to the center of the body. Also wake with the impulse.
-            player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
-        }
+                // Use impulse for jump - immediate change.
+                // Apply it to the center of the body. Also wake with the impulse.
+                player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+            }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) {
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) {
 
-            // Move, but not too fast.
-            player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-        }
+                // Move, but not too fast.
+                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+            }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) {
 
-            // Move, but not too fast.
-            player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+                // Move, but not too fast.
+                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+            }
         }
     }
 
@@ -191,8 +193,10 @@ public class PlayScreen implements Screen {
 
         hud.update(dt);
 
-        // Update game cam. Only track x so the camera doesn't jump up and down.
-        gameCam.position.x = player.b2body.getPosition().x;
+        if(player.currentState != Mario.State.DEAD) {
+            // Update game cam. Only track x so the camera doesn't jump up and down.
+            gameCam.position.x = player.b2body.getPosition().x;
+        }
 
         // Update camera with each update.
         gameCam.update();

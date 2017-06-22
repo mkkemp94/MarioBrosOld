@@ -21,6 +21,7 @@ public class MarioBros extends Game {
 	// Filters. Every fixture has one. There are two parts:
 	// Category - what is this fixture? Mario? Brick? Coin?
 	// Mask - what can this fixture collide with?
+	public static final short NOTHING_BIT = 0;
 	public static final short GROUND_BIT = 1;
 	public static final short MARIO_BIT = 2;
 	public static final short BRICK_BIT = 4;

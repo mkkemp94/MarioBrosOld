@@ -1,6 +1,7 @@
 package com.mkemp.mariobros.Sprites;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -23,7 +26,7 @@ import com.mkemp.mariobros.Screens.PlayScreen;
 public class Mario extends Sprite {
 
     // Holds all the states Mario can be in.
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING };
+    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
 
     // Current and previous states.
     public State currentState;
@@ -43,9 +46,9 @@ public class Mario extends Sprite {
     // Mario standing, jumping, and running.
     private TextureRegion littleMarioStand;
     private TextureRegion littleMarioJump;
-
     private TextureRegion bigMarioStand;
     private TextureRegion bigMarioJump;
+    private TextureRegion marioDead;
 
     private Animation<TextureRegion> growMario;
     private Animation<TextureRegion> littleMarioRun;
@@ -57,6 +60,7 @@ public class Mario extends Sprite {
     private boolean runGrowAnimation;
     private boolean timeToDefineBigMario;
     private boolean timeToRedefineMario;
+    private boolean marioIsDead;
 
     // Constructor takes in a world.
     public Mario(PlayScreen screen, AssetManager manager) {
@@ -81,6 +85,8 @@ public class Mario extends Sprite {
 
         littleMarioJump = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 80, 0, 16, 16);
         bigMarioJump = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 80, 0, 16, 32);
+
+        marioDead = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 96, 0, 16, 16);
 
         // Create the running animation out of an array of texture regions.
         Array<TextureRegion> frames = new Array<TextureRegion>();
@@ -138,6 +144,11 @@ public class Mario extends Sprite {
 
     }
 
+    /**
+     * Returns the texture region we'll be drawing to the screen.
+     * @param dt
+     * @return
+     */
     public TextureRegion getFrame(float dt) {
 
         // What state is Mario in?
@@ -148,6 +159,9 @@ public class Mario extends Sprite {
         // Depending on the current state...
         switch (currentState) {
 
+            case DEAD:
+                region = marioDead;
+                break;
             case GROWING:
                 region = growMario.getKeyFrame(stateTimer);
                 if (growMario.isAnimationFinished(stateTimer))
@@ -188,7 +202,9 @@ public class Mario extends Sprite {
     public State getState() {
 
         // What is our b2body doing currently?
-        if (runGrowAnimation)
+        if (marioIsDead)
+            return State.DEAD;
+        else if (runGrowAnimation)
             return State.GROWING;
         else if (b2body.getLinearVelocity().y > 0
                 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
@@ -218,7 +234,15 @@ public class Mario extends Sprite {
             manager.get("audio/sounds/powerdown.wav", Sound.class).play();
         }
         else {
+            manager.get("audio/music/super_mario_world_remix.ogg", Music.class).stop();
             manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+            marioIsDead = true; // so we can set the texture region and set state to dead
+            Filter filter = new Filter();
+            // All fixtures collide with nothing
+            filter.maskBits = MarioBros.NOTHING_BIT; // what a fixture can collide with
+            for (Fixture fixture : b2body.getFixtureList())
+                fixture.setFilterData(filter);
+            b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
         }
     }
 
